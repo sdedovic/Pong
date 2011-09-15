@@ -11,10 +11,10 @@ public class Ball {
 	private static float width = 15;
 	private static float height = 15;
 	
-	private float speed;
 	private Vector2f pos = new Vector2f();
-	private Vector2f vel = new Vector2f(0.1f, -0.15f);
-	private Vector2f start = new Vector2f(0.1f, -0.15f);
+	private Vector2f vel = new Vector2f(0.1f, 0.15f);
+	private Vector2f start = new Vector2f(0.1f, 0.15f);
+	private Vector2f speed = new Vector2f();
 	
 	public Ball(){
 		pos.setX((float) ((720/2)-7.5));
@@ -22,7 +22,6 @@ public class Ball {
 		Vector2f.add(pos, start, pos);
 		box.setRect(pos.getX(), pos.getY(), width, height);
 		Level.setRectangle(box, "ball");
-		speed = 0.0f;
 	}
 	public void render(){
 		GL11.glPushMatrix();
@@ -67,12 +66,11 @@ public class Ball {
 		}
 		if(Level.getRectangle("user").intersects(box) || Level.getRectangle("ai").intersects(box)){
 			vel.setX(-vel.getX());
-			speed += .005;
-			vel.setX(vel.getX()+speed);
-			vel.setY(vel.getY()+speed);
+			vel.set(vel.getX()+(float).01, vel.getY()+(float).01);
+
 		}
 	}
-	public double getPos(){
-		return box.getCenterY();
+	public static double getPos(){
+		return Level.getRectangle("ball").getCenterY();
 	}
 }

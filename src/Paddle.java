@@ -17,6 +17,9 @@ public class Paddle{
 	private Vector2f vel = new Vector2f(0.0f, 0.0f);
 	
 	public Paddle(boolean isUserTemp){
+		
+		
+		
 		pos.setY((480/2)-(height/2));
 		moveUp = true;
 		moveDown = true;
@@ -29,12 +32,21 @@ public class Paddle{
 			isUser = false;
 			pos.setX(25);
 		}
+		
+		if(isUser == true){
+			paddle.setRect(pos.getX(), pos.getY(), pos.getX()+width, pos.getY()+height);
+			Level.setRectangle(paddle, "user");
+		}
+		else if(isUser == false){
+			paddle.setRect(pos.getX(), pos.getY(), pos.getX()-width, pos.getY()+height);
+			Level.setRectangle(paddle, "ai");
+		}
 	}
 	public void render(){
 		GL11.glPushMatrix();
 		
-		logic();
 		draw();
+		logic();
 		checkBounds();
 		
     	GL11.glPopMatrix();
@@ -51,7 +63,7 @@ public class Paddle{
 			Level.setRectangle(paddle, "user");
 		}
 		else if(isUser == false){
-			paddle.setRect(pos.getX(), pos.getY(), pos.getX()+width, pos.getY()+height);
+			paddle.setRect(pos.getX(), pos.getY(), pos.getX()-width, pos.getY()+height);
 			Level.setRectangle(paddle, "ai");
 		}
 	}
@@ -72,21 +84,21 @@ public class Paddle{
 	private void logic(){
 		if(isUser){
 			if(Keyboard.isKeyDown(Keyboard.KEY_UP ) == true && moveUp == true){
-				translate(-0.1f);
+				translate(-0.2f);
 			}
 			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN) == true && moveDown == true){
-				translate(0.1f);
+				translate(0.2f);
 			}
 			else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN) == false || Keyboard.isKeyDown(Keyboard.KEY_UP) == false || moveUp == false || moveDown == false){
 				translate(0.0f);
 			}
 		}
-		else if(!isUser){
-			if(paddle.getCenterY() < Level.getRectangle("ball").getCenterY() && moveDown == true){
-				translate(-0.1f);
+		else{
+			if(Level.getRectangle("ai").getCenterY() < Ball.getPos() && moveDown){
+				translate(0.25f);
 			}
-			else if(paddle.getCenterY() < Level.getRectangle("ball").getCenterY() && moveUp == true){
-				translate(-0.1f);
+			else if(paddle.getCenterY() > Ball.getPos() && moveUp){
+				translate(-0.25f);
 			}
 			
 		}
